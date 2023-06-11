@@ -1,0 +1,36 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+
+export const uniqueTags = [
+	...new Set(
+		(await Astro.glob("../../content/blog/*.md"))
+			.map((post) => post.frontmatter.tags)
+			.flat()
+	),
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<ul>
+				{
+					uniqueTags.map((tag) => (
+						<li>
+							<a href={`/tags/${tag}`}>{`#${tag}`}</a>
+						</li>
+					))
+				}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>

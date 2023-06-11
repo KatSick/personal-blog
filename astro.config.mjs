@@ -10,6 +10,12 @@ import compressor from "astro-compressor";
 // https://astro.build/config
 export default defineConfig({
   site: "https://blog.katsick.cloud",
+  experimental: {
+    assets: true,
+  },
+  build: {
+    inlineStylesheets: "auto",
+  },
   integrations: [
     mdx(),
     sitemap(),
