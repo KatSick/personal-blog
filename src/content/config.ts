@@ -6,6 +6,8 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     tags: z.array(z.string()),
+    heroImagePrompt: z.string().optional(),
+    // minutesRead: z.number(),
     // Transform string to Date object
     pubDate: z
       .string()

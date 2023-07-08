@@ -5,9 +5,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & { minutesRead: string };
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, minutesRead, heroImagePrompt } = Astro.props;
 ---
 
 <html lang="en">
@@ -32,9 +32,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<Header />
 		<main>
 			<article>
-				{heroImage && <img width={720} height={360} src={heroImage} alt="" />}
+				{heroImage && <img height={360} src={heroImage} alt={heroImagePrompt} style="aspect-ratio: 1 / 1;" />}
+				<br />
+				{heroImagePrompt && <small><i>{heroImagePrompt}</i></small>}
 				<h1 class="title">{title}</h1>
-				<FormattedDate date={pubDate} />
+				<FormattedDate date={pubDate} /> — {minutesRead}
 				{
 					updatedDate && (
 						<div class="last-updated-on">

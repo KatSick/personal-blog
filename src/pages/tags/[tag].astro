@@ -1,22 +1,23 @@
 ---
 import BaseHead from "../../components/BaseHead.astro";
-import BlogPosts from "../../components/BlogPosts.astro";
 import Footer from "../../components/Footer.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../../consts";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const allPosts = await Astro.glob("../../content/blog/*.md");
+  const allPosts = await getCollection("blog");
 
   const uniqueTags = [
-    ...new Set(allPosts.map((post) => post.frontmatter.tags).flat()),
+    ...new Set(allPosts.map((post) => post.data.tags).flat()),
   ];
 
   return uniqueTags.map((tag) => {
     const filteredPosts = allPosts.filter((post) =>
-      post.frontmatter.tags.includes(tag)
+      post.data.tags.includes(tag)
     );
+
     return {
       params: { tag },
       props: { posts: filteredPosts },
@@ -25,7 +26,9 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.params;
-const { posts } = Astro.props;
+const { posts } = Astro.props as Awaited<
+  ReturnType<typeof getStaticPaths>
+>[0]["props"];
 ---
 
 <!DOCTYPE html>
@@ -36,20 +39,19 @@ const { posts } = Astro.props;
   <body>
     <Header title={SITE_TITLE} />
     <main>
-      <p>Posts tagged with #{tag}</p>
+      <p>Posts tagged with #{tag} — {posts.length}</p>
       <ul>
         {
           posts
-            .sort(
-              (a, b) =>
-                a.frontmatter.pubDate.valueOf() - b.data.frontmatter.valueOf()
-            )
-            .map((post) => (
-              <li>
-                <FormattedDate date={new Date(post.frontmatter.pubDate)} />
-                <a href={post.url}>{post.frontmatter.title}</a>
-              </li>
-            ))
+            .sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf())
+            .map((post) => {
+              return (
+                <li>
+                  <FormattedDate date={post.data.pubDate} />
+                  <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+                </li>
+              );
+            })
         }
       </ul>
     </main>

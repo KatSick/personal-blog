@@ -3,9 +3,11 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import compress from "astro-compress";
-// TODO: mixed content error with HTTPS with prefetch. Need to debug and raise issue https://github.com/withastro/astro/issues?q=%40astrojs%2Fprefetch+https
-// import prefetch from "@astrojs/prefetch";
+import prefetch from "@astrojs/prefetch";
 import compressor from "astro-compressor";
+import { remarkReadingTime } from "./remark-reading-time.mjs";
+
+import expressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,13 +17,18 @@ export default defineConfig({
   },
   build: {
     inlineStylesheets: "auto",
+    format: "file",
+  },
+  markdown: {
+    remarkPlugins: [remarkReadingTime],
   },
   integrations: [
+    expressiveCode(), // https://github.com/expressive-code/expressive-code/blob/1dff49a3dfa1fbdab52be5264e15e76fc9f0cf2e/packages/astro-expressive-code/README.md
     mdx(),
     sitemap(),
     robotsTxt(),
     compress(),
-    // prefetch(),
+    prefetch(),
     compressor(),
   ],
 });
