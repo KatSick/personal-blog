@@ -3,7 +3,6 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import compress from "astro-compress";
-import prefetch from "@astrojs/prefetch";
 import compressor from "astro-compressor";
 import { remarkReadingTime } from "./remark-reading-time.mjs";
 
@@ -28,7 +27,6 @@ export default defineConfig({
     sitemap(),
     robotsTxt(),
     compress(),
-    prefetch(),
     compressor(),
   ],
 });

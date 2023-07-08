@@ -1,3 +1,3 @@
 deploy:
 	pnpm build
-	# upload to server with rsync
+	rsync -av dist/ rsync://patso@blog-upload.katsick.cloud/volume
