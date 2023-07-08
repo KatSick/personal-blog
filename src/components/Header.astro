@@ -28,30 +28,46 @@ import { SITE_TITLE } from "../consts";
 	<div id="results"></div>
 </header>
 <script is:inline>
-document.querySelector("#search")?.addEventListener("input", async (e) => {
+const resultsElement = document.getElementById("results");
+document.getElementById("search").addEventListener("input", search);
+
+async function search(e) {
 	// only load the pagefind script once
 	if (e.target.dataset.loaded !== "true") {
-		e.target.dataset.loaded = "true";
 		// load the pagefind script
 		window.pagefind = await import("/pagefind/pagefind.js");
+		e.target.dataset.loaded = "true";
 	}
 
 	// search the index using the input value
-	const search = await window.pagefind.search(e.target.value);
+	if (!window.pagefind) {
+		console.error("pagefind not loaded for some reason...");
+		return;
+	}
+
+	pagefind.preload(e.target.value);
+	const search = await window.pagefind.debouncedSearch(e.target.value);
+	console.debug("search results", search);
+
+	if (search === null) {
+		// a more recent search call has been made, nothing to do
+		return;
+	}
 
 	// clear the old results
-	document.querySelector("#results").innerHTML = "";
+
+	resultsElement.innerHTML = "";
 
 	// add the new results
 	for (const result of search.results) {
 		const data = await result.data();
-		document.querySelector("#results").innerHTML += `
+		resultsElement.innerHTML += `
         <a href="${"/blog" + data.url.replace(".html", "")}" tabindex="0">
           <h3>${data.meta.title}</h3>
           <p>${data.excerpt}</p>
         </a>`;
 	}
-});
+}
 </script>
 
 <style>

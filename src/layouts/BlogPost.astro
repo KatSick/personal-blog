@@ -35,6 +35,8 @@ const { title, description, pubDate, updatedDate, heroImage, minutesRead, heroIm
 				{heroImage && <img height={360} src={heroImage} alt={heroImagePrompt} style="aspect-ratio: 1 / 1;" />}
 				<br />
 				{heroImagePrompt && <small><i>{heroImagePrompt}</i></small>}
+				<br />
+				<br />
 				<h1 class="title">{title}</h1>
 				<FormattedDate date={pubDate} /> — {minutesRead}
 				{
