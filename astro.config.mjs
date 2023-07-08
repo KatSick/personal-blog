@@ -16,7 +16,6 @@ export default defineConfig({
   },
   build: {
     inlineStylesheets: "auto",
-    format: "file",
   },
   markdown: {
     remarkPlugins: [remarkReadingTime],
